@@ -1,0 +1,6 @@
+@sdonboarding.Server_HostAddress = http://localhost:5160
+
+GET {{sdonboarding.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

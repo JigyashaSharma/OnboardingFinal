@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdonboarding.Server", "sdonboarding.Server\sdonboarding.Server.csproj", "{7A5A2C64-E950-4BB9-A0A5-202AAF61F8F7}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "sdonboarding.client", "sdonboarding.client\sdonboarding.client.esproj", "{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A5A2C64-E950-4BB9-A0A5-202AAF61F8F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A5A2C64-E950-4BB9-A0A5-202AAF61F8F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A5A2C64-E950-4BB9-A0A5-202AAF61F8F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A5A2C64-E950-4BB9-A0A5-202AAF61F8F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726F6EAE-7DAB-4C1A-AE53-5948D2165DE1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E265AA65-7955-4666-BACB-DDC92EFF604A}
+	EndGlobalSection
+EndGlobal
