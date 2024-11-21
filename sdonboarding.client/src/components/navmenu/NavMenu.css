@@ -1,0 +1,43 @@
+﻿/*.active style will be applied automatically to link that is active*/
+.active {
+    background-color: #1d4ed8;
+
+}
+
+.navbar {
+    /*sticky: "top";
+    expand: "md";*/
+    z-index: 1000 !important; /* Ensure it's above other elements */
+    width: 100%;
+}
+
+.title {
+    font-size: 1.5rem;
+    margin: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    align-self: flex-start;
+}
+
+/*for the link inside nav*/
+.nav-link-custom {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+}
+
+/*hover will not be applied to the one currently active using the pseudo selector*/
+.nav-link-custom:not(.active):hover {
+    background-color: #ffd800;
+}
+
+/*for small screen*/
+@media (max-width: 768px) {
+    /* Styles for screens smaller than 768px */
+    nav ul {
+        display: none; /* Hide nav items */
+    }
+}
