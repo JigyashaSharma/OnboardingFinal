@@ -5,7 +5,7 @@ Task 2.1: Create the redux store using redux-toolkit.
 		
 Task 2.2: Create the services to call the server api endpoints.
 
-Task 2.2: Create the basic Website components Navmenu, Display entities data, sorting, Pagination, Message and footer.
+Task 2.3: Create the basic Website components Navmenu, Display entities data, sorting, Pagination, Message and footer.
 		  Code:
 				Navmenu:  src/components/Navmenu
 						  added changes in App.jsx
@@ -19,4 +19,11 @@ Task 2.2: Create the basic Website components Navmenu, Display entities data, so
 				Message: displays the error and success.
 							src/components/Messgae.jsx
 				Footer: src/components/Footer.jsx
+				
+Task 2.4: Create the component to create the entities.
+		  Code: 
+				src/components/UITemplate/AddDataTemplate.jsx
+				src/hooks/AddDataHooks.jsx
+				src/utils/GenericAddDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
 									  

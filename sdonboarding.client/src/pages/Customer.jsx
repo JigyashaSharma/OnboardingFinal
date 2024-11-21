@@ -14,6 +14,7 @@ import Message from '../components/Message';
 import DisplayTableTemplate from '../components/UITemplate/DisplayDataTemplate';
 import PaginationTemplate from '../components/UITemplate/PaginationTemplate';
 import Footer from '../components/Footer';
+import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 
 const Customer = () => {
     const dispatch = useDispatch();
@@ -96,6 +97,9 @@ const Customer = () => {
                 <div className="mt-4 flex justify-left">
                     <PaginationTemplate type='Customer' />
                 </div>
+                {/*Add Customer component */}
+                {addVisible && <AddDataTemplate type='Customer' />}
+
                 <div className="py-4 ">
                     {/*Footer Component */}
                     {<Footer />}

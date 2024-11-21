@@ -12,6 +12,7 @@ import PaginationTemplate from '../components/UITemplate/PaginationTemplate';
 import { setError} from '../redux/slices/commonSlice';
 import { setProducts, toggleAddVisibilityProduct, setTotalCountProduct } from '../redux/slices/productSlice';
 import Footer from '../components/Footer';
+import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 
 const Product = () => {
     const dispatch = useDispatch();
@@ -92,6 +93,8 @@ const Product = () => {
                 <div className="mt-4 flex justify-left">
                     <PaginationTemplate type='Product' />
                 </div>
+                {/*Add Customer component */}
+                {addVisible && <AddDataTemplate type='Product' />}
 
                 <div className="py-4 ">
                     {/*Footer Component */}
