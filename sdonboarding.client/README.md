@@ -34,4 +34,13 @@ Task 2.5: Create the component to edit the entities.
 				src/utils/GenericEditDataMethods.jsx
 				Changed the Customer, Product, Store and Sale page to add this component.
 									  
+Task 2.6: Create the component to delete the entities.
+		  Code: 
+				src/components/UITemplate/DeleteDataTemplate.jsx
+				src/hooks/DeleteDataHooks.jsx
+				src/utils/GenericDeleteDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
+				
+Note: Sales uses the methods from : src/utils/GenericMethods.jsx and src/hooks/commonHooks.jsx
+	  I have put some validation functions also in src/utils/GenericMethods.jsx which is used by all the entities for some basic input validations.
 									  

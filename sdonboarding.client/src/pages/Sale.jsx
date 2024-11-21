@@ -16,6 +16,7 @@ import PaginationTemplate from '../components/UITemplate/PaginationTemplate';
 import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
+import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
 
 const Sale = () => {
     const dispatch = useDispatch();
@@ -103,6 +104,8 @@ const Sale = () => {
                 {/*Edit Customer component */}
                 {editVisible && <EditProductTemplate type='Sale' />}
 
+                {/*Delete Customer component */}
+                {deleteVisible && <DeleteDataTemplate type='Sale' />}
                 <div className="py-4 ">
                     {/*Footer Component */}
                     {<Footer />}

@@ -14,6 +14,7 @@ import { setProducts, toggleAddVisibilityProduct, setTotalCountProduct } from '.
 import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
+import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
 
 const Product = () => {
     const dispatch = useDispatch();
@@ -100,6 +101,8 @@ const Product = () => {
                 {/*Edit Customer component */}
                 {editVisible && <EditProductTemplate type='Product' />}
 
+                {/*Delete Customer component */}
+                {deleteVisible && <DeleteDataTemplate type='Product' />}
                 <div className="py-4 ">
                     {/*Footer Component */}
                     {<Footer />}
