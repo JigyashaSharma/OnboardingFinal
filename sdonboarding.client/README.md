@@ -26,4 +26,12 @@ Task 2.4: Create the component to create the entities.
 				src/hooks/AddDataHooks.jsx
 				src/utils/GenericAddDataMethods.jsx
 				Changed the Customer, Product, Store and Sale page to add this component.
+				
+Task 2.5: Create the component to edit the entities.
+		  Code: 
+				src/components/UITemplate/EditDataTemplate.jsx
+				src/hooks/EditDataHooks.jsx
+				src/utils/GenericEditDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
+									  
 									  

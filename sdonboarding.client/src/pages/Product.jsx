@@ -13,6 +13,7 @@ import { setError} from '../redux/slices/commonSlice';
 import { setProducts, toggleAddVisibilityProduct, setTotalCountProduct } from '../redux/slices/productSlice';
 import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
+import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
 
 const Product = () => {
     const dispatch = useDispatch();
@@ -95,6 +96,9 @@ const Product = () => {
                 </div>
                 {/*Add Customer component */}
                 {addVisible && <AddDataTemplate type='Product' />}
+
+                {/*Edit Customer component */}
+                {editVisible && <EditProductTemplate type='Product' />}
 
                 <div className="py-4 ">
                     {/*Footer Component */}
