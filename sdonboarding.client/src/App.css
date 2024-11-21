@@ -1,8 +1,27 @@
-﻿#root {
+﻿.app-layout {
+    //height: 100%; /*100% instead of  100vp helps in scroll and nav bar sticking. Not sure I didn't see it happening. Putting here for info. */
+    width: 100%;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding-top: 56px; /* Adjust this value based on your navbar height */
+}
+
+/*
+#root {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
+}*/
+
+tr:nth-child(even) {
+    background: #F2F2F2;
+}
+
+tr:nth-child(odd) {
+    background: #FFF;
 }
 
 th, td {
