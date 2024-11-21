@@ -107,6 +107,7 @@ const Customer = () => {
 
                 {/*Delete Customer component */}
                 {deleteVisible && <DeleteDataTemplate type='Customer' />}
+
                 <div className="py-4 ">
                     {/*Footer Component */}
                     {<Footer />}

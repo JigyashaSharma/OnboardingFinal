@@ -9,6 +9,7 @@ import { useGetDisplayObject, useSetEditObject, useSetDeleteObject, useGetSortLi
 import { genericDisplayDataMethods } from '../../utils/GenericDisplayMethods';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCallback, useEffect, useState } from 'react';
+import '../../styles/display.css';
 
 const DisplayTableTemplate = ({ type }) => {
 
@@ -69,15 +70,15 @@ const DisplayTableTemplate = ({ type }) => {
                     <tr>
                         {Object.entries(theader).map(([key, value]) => (
                             <th key={value}>
-                            <div>
-                                {value}
+                                <div className="space-x-2">
+                                    {value}
 
-                                    <button className=" focus:outline-none text-[10px] text-gray-400" onClick={() => handleSortAsc(key)}>
+                                    <button className="btnNew" onClick={() => handleSortAsc(key)}>
                                         &#x25B2;
                                     </button>
-                                    <button className="focus:outline-none text-[10px] text-gray-400" onClick={() => handleSortDesc(key)}>
-                                  &#x25BC;
-                                </button>
+                                    <button className="btnNew" onClick={() => handleSortDesc(key)}>
+                                        &#x25BC;
+                                    </button>
                                 </div>
                             </th>
                         ))}
