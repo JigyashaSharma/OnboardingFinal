@@ -18,7 +18,10 @@ import genericMethods from '../../utils/GenericMethods';
 const AddDataTemplate = ({ type }) => {
 
     const dispatch = useDispatch();
-    const { labels = {}, initObject = {}, formElementType = [] } = genericAddDataMethods.getInitLocalObject(type) || {};
+    const { labels, initObject, formElementType } = genericAddDataMethods.getInitLocalObject(type);
+    if (!labels || !initObject || !formElementType) {
+        return;
+    }
 
     const [localObject, setLocalObject] = useState(initObject);
     /* custom hooks */
@@ -45,7 +48,6 @@ const AddDataTemplate = ({ type }) => {
             }
             
         } catch (error) {
-            //console.error('Error fetching data:', error);
             dispatch(setError('Error fetching data for Sales:', error));
         }
     }, [dispatch]);

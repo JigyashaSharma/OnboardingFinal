@@ -52,7 +52,9 @@ const genericAddDataMethods = {
                 if (process.env.NODE_ENV !== 'production') {
                     console.error("type argument not valid in GenericAddDataMethods.getInitLocalObject"); // Log in development or staging environments
                 }
-                return null;
+                return {
+                    labels: null, initObject: null, formElementType: null
+                    };
         }
     },
     /**

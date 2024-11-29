@@ -15,33 +15,42 @@ export const genericEditDataMethods = {
      *           formElementType: Used to decide which element to use in AddDataTemplate form,
      */
     getEditObjectLabels(type) {
-        if (type === ObjectTypes.Customer) {
-            const labels = { name: 'Name', address: 'Address' };
-            const formElementType = ['string', 'string'];
-            return {
-                labels, formElementType
-            };
+        let labels = {};
+        let formElementType = []; 
+        switch (type) {
+            case ObjectTypes.Customer:
+                labels = { name: 'Name', address: 'Address' };
+                formElementType = ['string', 'string'];
+                return {
+                    labels, formElementType
+                };
+                break;
+            case ObjectTypes.Product:
+                labels = { name: 'Name', price: 'Price' };
+                formElementType = ['string', 'number'];
+                return {
+                    labels, formElementType
+                };
+                break;
+            case ObjectTypes.Store:
+                labels = { name: 'Name', address: 'Address' };
+                formElementType = ['string', 'string']
+                return {
+                    labels, formElementType
+                };
+                break;
+            case ObjectTypes.Sale:
+                labels = { dateSold: 'DateSold', customer: 'Customer', product: 'Product', store: 'Store' };
+                formElementType = ['date', 'customer', 'product', 'store'];
+                return {
+                    labels, formElementType
+                };
+                break;
+            default:
+                return {
+                    labels: null, formElementType: null
+                };
 
-        } else if (type === ObjectTypes.Product) {
-            const labels = { name: 'Name', price: 'Price' };
-            const formElementType = ['string', 'number'];
-            return {
-                labels, formElementType
-            };
-
-        } else if (type === ObjectTypes.Store) {
-            const labels = { name: 'Name', address: 'Address' };
-            const formElementType = ['string', 'string']
-            return {
-                labels, formElementType
-            };
-
-        } else if (type === ObjectTypes.Sale) {
-            const labels = { dateSold: 'DateSold', customer: 'Customer', product: 'Product', store: 'Store' };
-            const formElementType = ['date', 'customer', 'product', 'store'];
-            return {
-                labels, formElementType
-            };
         }
     },
     /**

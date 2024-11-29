@@ -28,6 +28,9 @@ const EditDataTemplate = ({ type }) => {
         return;
     }
     const { labels, formElementType } = genericEditDataMethods.getEditObjectLabels(type);
+    if (!labels || !formElementType) {
+        return;
+    }
 
     /* custom hooks */
     const [localObject, setLocalObject] = useState(editObject);

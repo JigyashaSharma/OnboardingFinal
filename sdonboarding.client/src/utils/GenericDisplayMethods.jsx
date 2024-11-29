@@ -189,6 +189,7 @@ export const genericDisplayDataMethods = {
                     }
                 break;
             default:
+                return false;
 
         }
         

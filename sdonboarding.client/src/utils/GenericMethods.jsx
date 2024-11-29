@@ -4,6 +4,7 @@
 import customerApiServices from '../services/customerServices';
 import productApiServices from '../services/productServices';
 import storeApiServices from '../services/storeServices';
+import { ObjectTypes } from './GenericObjects';
 
 const genericMethods = {
 
@@ -26,7 +27,9 @@ const genericMethods = {
             return customersData.dtos;
 
         } catch (errors) {
-            console.log(errors);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error(errors);
+            }
             throw errors;
         }
     },
@@ -49,7 +52,9 @@ const genericMethods = {
             return productsData.dtos;
 
         } catch (errors) {
-            console.log(errors);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error(errors);
+            }
             throw errors;
         }
     },
@@ -72,7 +77,9 @@ const genericMethods = {
             return storesData.dtos;
 
         } catch (errors) {
-            console.log(errors);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error(errors);
+            }
             throw errors;
         }
     },
@@ -120,69 +127,80 @@ const genericMethods = {
         }
     },
     validateInputValuesOnSubmit(type) {
-        let fromValid = true;
+        let formValid = true;
+        let nameInput, addressInput, check;
 
-        if (type === 'Customer') {
-            const nameInput = document.querySelector('input[type="text"][name="name"]');
-            const addressInput = document.querySelector('input[type="text"][name="address"]');
+        switch (type) {
+            case ObjectTypes.Customer:
+                nameInput = document.querySelector('input[type="text"][name="name"]');
+                addressInput = document.querySelector('input[type="text"][name="address"]');
 
-            let check = genericMethods.validateNameInput(nameInput.value);
-            if (check === 0) {
-                nameInput.setCustomValidity('Please enter a valid name (letters, spaces, hyphens only, no leading or trailing spaces).');
-                fromValid = false;
-                nameInput.reportValidity();
-                return fromValid;
-            } else {
-                nameInput.setCustomValidity('');
-            }
+                check = genericMethods.validateNameInput(nameInput.value);
+                if (check === 0) {
+                    nameInput.setCustomValidity('Please enter a valid name (letters, spaces, hyphens only, no leading or trailing spaces).');
+                    formValid = false;
+                    nameInput.reportValidity();
+                    return formValid;
+                } else {
+                    nameInput.setCustomValidity('');
+                }
 
-            check = genericMethods.validateAddressInput(addressInput.value);
-            if (check === 0) {
-                addressInput.setCustomValidity('Please enter a valid address (alphanumeric then space, comma, dot, hyphens with more alpha numeric, no leading or trailing spaces).');
-                fromValid = false;
-                addressInput.reportValidity();
-                return fromValid;
-            } else {
-                addressInput.setCustomValidity('');
-            }
-        } else if (type === 'Product') {
-            const nameInput = document.querySelector('input[type="text"][name="name"]');
+                check = genericMethods.validateAddressInput(addressInput.value);
+                if (check === 0) {
+                    addressInput.setCustomValidity('Please enter a valid address (alphanumeric then space, comma, dot, hyphens with more alpha numeric, no leading or trailing spaces).');
+                    formValid = false;
+                    addressInput.reportValidity();
+                    return formValid;
+                } else {
+                    addressInput.setCustomValidity('');
+                }
+                break;
+            case ObjectTypes.Product:
+                nameInput = document.querySelector('input[type="text"][name="name"]');
 
-            let check = genericMethods.validateProductStoreNameInput(nameInput.value);
-            if (check === 0) {
-                nameInput.setCustomValidity('Please enter a valid name (alphanumeric, spaces, dot, hyphens only, no leading or trailing spaces).');
-                fromValid = false;
-                nameInput.reportValidity();
-                return fromValid;
-            } else {
-                nameInput.setCustomValidity('');
-            }
-        } else if (type === 'Store') {
-            const nameInput = document.querySelector('input[type="text"][name="name"]');
-            const addressInput = document.querySelector('input[type="text"][name="address"]');
+                check = genericMethods.validateProductStoreNameInput(nameInput.value);
+                if (check === 0) {
+                    nameInput.setCustomValidity('Please enter a valid name (alphanumeric, spaces, dot, hyphens only, no leading or trailing spaces).');
+                    formValid = false;
+                    nameInput.reportValidity();
+                    return formValid;
+                } else {
+                    nameInput.setCustomValidity('');
+                }
+                break;
+            case ObjectTypes.Store:
+                nameInput = document.querySelector('input[type="text"][name="name"]');
+                addressInput = document.querySelector('input[type="text"][name="address"]');
 
-            let check = genericMethods.validateProductStoreNameInput(nameInput.value);
-            if (check === 0) {
-                nameInput.setCustomValidity('Please enter a valid name (alphanumeric, spaces, hyphens only, no leading or trailing spaces).');
-                fromValid = false;
-                nameInput.reportValidity();
-                return fromValid;
-            } else {
-                nameInput.setCustomValidity('');
-            }
+                check = genericMethods.validateProductStoreNameInput(nameInput.value);
+                if (check === 0) {
+                    nameInput.setCustomValidity('Please enter a valid name (alphanumeric, spaces, hyphens only, no leading or trailing spaces).');
+                    formValid = false;
+                    nameInput.reportValidity();
+                    return formValid;
+                } else {
+                    nameInput.setCustomValidity('');
+                }
 
-            check = genericMethods.validateAddressInput(addressInput.value);
-            if (check === 0) {
-                addressInput.setCustomValidity('Please enter a valid address (start alphanumeric word then (space/comma/dot/hyphens/alpha numeric), no leading or trailing spaces).');
-                fromValid = false;
-                addressInput.reportValidity();
-                return fromValid;
-            } else {
-                addressInput.setCustomValidity('');
-            }
+                check = genericMethods.validateAddressInput(addressInput.value);
+                if (check === 0) {
+                    addressInput.setCustomValidity('Please enter a valid address (start alphanumeric word then (space/comma/dot/hyphens/alpha numeric), no leading or trailing spaces).');
+                    formValid = false;
+                    addressInput.reportValidity();
+                    return formValid;
+                } else {
+                    addressInput.setCustomValidity('');
+                }
+                break;
+            case ObjectTypes.Sale:
+                //Nothing to check since we are passing the option list
+                formValid = true;
+                break;
+            default:
+                formValid = false;
+
         }
-
-        return fromValid;
+        return formValid;
     },
     /**
      * @param params : list of variables that we want to validate if they have proper value.
