@@ -196,7 +196,7 @@ const EditDataTemplate = ({ type }) => {
                                          // Render date input and removing the T part
                                         genericMethods.getDateDisplay(key, localObject, handleInputChange)
 
-                                    ) : formElementType[index].toLowerCase === ObjectTypes.Number.toLowerCase() ? (
+                                    ) : formElementType[index].toLowerCase() === ObjectTypes.Number.toLowerCase() ? (
                                         // Render number input if the field is a number(Price)
                                         genericMethods.getNumberDisplay(key, localObject, labels, handleInputChange)
 

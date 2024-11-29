@@ -32,7 +32,7 @@ const productApiServices = {
             return response.data;
         } catch (error) {
             if (process.env.NODE_ENV !== 'production') {
-                conmsole.error("Failed to create product. ", error);
+                console.error("Failed to create product. ", error);
             }
             throw new Error("create product failed!! ");
         }

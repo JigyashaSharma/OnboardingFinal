@@ -167,7 +167,7 @@ const AddDataTemplate = ({ type }) => {
                                     ) : formElementType[index].toLowerCase() === ObjectTypes.Date.toLowerCase() ? (
                                         // Render date input if the field is a date
                                         genericMethods.getDateDisplay(key, localObject, handleInputChange)
-                                    ) : formElementType[index].toLowerCase === ObjectTypes.Number.toLowerCase() ? (
+                                    ) : formElementType[index].toLowerCase() === ObjectTypes.Number.toLowerCase() ? (
                                         // Render number input if the field is a number(Price)
                                         genericMethods.getNumberDisplay(key, localObject, labels, handleInputChange)
                                     ) : (
