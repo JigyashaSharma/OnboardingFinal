@@ -10,12 +10,18 @@ import { MessageTypes } from '../utils/GenericObjects';
 const Message = ({ type, message }) => {
     let messageClass = '';
 
-    if (type === MessageTypes.error) {
-        messageClass = 'text-red-500 bg-red-100 border-red-500';
-    } else if (type === MessageTypes.success) {
-        messageClass = 'text-green-500 text-green-100 border-green-500';
-    } else if (type === MessageTypes.loading) {
-        messageClass = 'text-blue-500 bg-blue-100 border-blue-500';
+    switch (type) {
+        case MessageTypes.error:
+            messageClass = 'text-red-500 bg-red-100 border-red-500';
+            break;
+        case MessageTypes.success:
+            messageClass = 'text-green-500 text-green-100 border-green-500';
+            break;
+        case MessageTypes.loading:
+            messageClass = 'text-blue-500 bg-blue-100 border-blue-500';
+            break;
+        default:
+            return;
     }
 
     return (
