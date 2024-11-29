@@ -79,29 +79,18 @@ const EditDataTemplate = ({ type }) => {
     }, [fetchOthersData]);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        const valid = genericMethods.handleMissingField({ name, value });
+        const valid = genericMethods.handleMissingField({ e });
         if (!valid) {
             alert("Missing value in form. Please try again.");
             return;
         }
+
+        const { name, value } = e.target;
+        
         e.target.setCustomValidity(''); //Needed to remove the custom message in edit form after changing input
         setLocalObject((prevState) => ({
             ...prevState,
             [name]: value,
-        }));
-    };
-
-    //handle the active dropdown value
-    const handleActiveChange = (e) => {
-        const valid = genericMethods.handleMissingField({ active: e.target.value });
-        if (!valid) {
-            alert("Missing value in form. Please try again.");
-            return;
-        }
-        setLocalObject((prevState) => ({
-            ...prevState,
-            active: e.target.value === 'true'
         }));
     };
 

@@ -59,30 +59,17 @@ const AddDataTemplate = ({ type }) => {
     }, [fetchOthersData]);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        const valid = genericMethods.handleMissingField({ name, value });
+        const valid = genericMethods.handleMissingField({ e });
         if (!valid) {
             alert("Missing value in form. Please try again.");
             return;
         }
+
+        const { name, value } = e.target;
         e.target.setCustomValidity('');
         setLocalObject((prevState) => ({
             ...prevState,
             [name]: value,
-        }));
-    };
-
-    /*handle the product active dropdown value*/
-    const handleActiveChange = (e) => {
-        const valid = genericMethods.handleMissingField({ active: e.target.value });
-        if (!valid) {
-            alert("Missing value in form. Please try again.");
-            return;
-        }
-        
-        setLocalObject((prevState) => ({
-            ...prevState,
-            active: e.target.value === 'true'
         }));
     };
 
