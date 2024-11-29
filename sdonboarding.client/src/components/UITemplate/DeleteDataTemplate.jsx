@@ -11,6 +11,13 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 const DeleteDataTemplate = ({ type }) => {
 
     const deleteObject = useGetDeleteObject(type);
+    if (!deleteObject) {
+        if (process.env.NODE_ENV !== 'production') {
+            console.error("Object to be deleted not found.");
+        }
+        return;
+    }
+
     const sendDeleteRequest = useSendDeleteRequest(deleteObject, type);
     const deleteCancel = useDeleteCancel(type);
 
@@ -23,6 +30,8 @@ const DeleteDataTemplate = ({ type }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        //Handling the errors inside sendDeleteRequest. Success/error this function will return and
+        // message will be set by sendDeleteRequest.
         await sendDeleteRequest();
     };
     return (

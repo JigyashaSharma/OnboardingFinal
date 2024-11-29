@@ -7,13 +7,11 @@
 import PropTypes from 'prop-types';
 import { useGetDisplayObject, useSetEditObject, useSetDeleteObject, useGetSortListAsc, useGetSortListDesc } from '../../hooks/DisplayDataHooks';
 import { genericDisplayDataMethods } from '../../utils/GenericDisplayMethods';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCallback, useEffect, useState } from 'react';
-import '../../styles/display.css';
 
 const DisplayTableTemplate = ({ type }) => {
 
-    //Used to sort the displayed Items
+    //Used to sort the displayed Items. Intially setting it to ascending and id as done in DB.
     const [sort, setSort] = useState(['asc', 'id']);
 
     /* custom hooks for edit delete and fetching objects to be displayed */
@@ -26,8 +24,6 @@ const DisplayTableTemplate = ({ type }) => {
 
     /* get the table column title and the object keys that we want to display on screen*/
     const theader = genericDisplayDataMethods.getDisplayTableHeader(type);
-
-    console.log("object loaded");
 
     const handleEdit = (object) => {
         setEditDisplay(object);
@@ -46,13 +42,28 @@ const DisplayTableTemplate = ({ type }) => {
     };
 
     const sortList = useCallback(() => {
+        //Data will already be sorted based on id in DB.
+        //Calling sort only if sort done for other attributes.
         if (sort[0] !== 'asc' || sort[1] !== 'id') {
             if (sort[0] === 'asc') {
+                // getSortListAsc handles any null value in array and return null if nothing to sort.
                 const sortedData = getSortListAsc(sort[1]);
+                if (!sortedData) {
+                    //resetting sort values to default
+                    setSort(['asc', 'id']);
+                    alert("No data to sort!!");
+                    return;
+                }
                 setObjects(sortedData);
             }
             else {
                 const sortedData = getSortListDesc(sort[1]);
+                if (!sortedData) {
+                    //resetting sort values to default
+                    setSort(['asc', 'id']);
+                    alert("No data to sort!!");
+                    return;
+                }
                 setObjects(sortedData);
             }
         }
@@ -68,58 +79,15 @@ const DisplayTableTemplate = ({ type }) => {
             <table className="table table-striped table-hover table-bordered rounded-lg" aria-labelledby="tableLabel">
                 <thead>
                     <tr>
-                        {Object.entries(theader).map(([key, value]) => (
-                            <th key={value}>
-                                <div className="space-x-2">
-                                    {value}
-
-                                    <button className="btnNew" onClick={() => handleSortAsc(key)}>
-                                        &#x25B2;
-                                    </button>
-                                    <button className="btnNew" onClick={() => handleSortDesc(key)}>
-                                        &#x25BC;
-                                    </button>
-                                </div>
-                            </th>
-                        ))}
+                        {genericDisplayDataMethods.displaySortButton(theader, handleSortAsc, handleSortDesc)}
                         <th>Actions</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {objects.map((object) => {
-                        return (
-                            <tr
-                                key={object.id}
-                                className='hover:bg-gray-200 transition-all duration-300 text-black'
-                            >
-                                {
-                                 /*here value is actual key in object. We will find the value to display with it.
-                                 Since object can have more extra information.*/ }
-                                {Object.keys(theader).map((key) => {
-                                    if (key === 'dateSold') {
-                                        return (<td key={key}>{object[key].split('T')[0]}</td>);     //trimming T part from date
-                                    } if (key === 'price' && type === 'Product') {
-                                        return (<td key={key}>{`$${object[key]}`}</td>)
-                                    }
-                                    return (<td key={key}>{object[key]}</td>);
-                                })}
-                                <td>
-                                    <button className="flex items-center p-2  text-white bg-yellow-500 rounded-md
-                                                focus:outline-none focus:ring-2 focus:ring-yellow   -300"
-                                        onClick={() => handleEdit(object)}>  {          /*this won't work: onClick={handleEdit(object)}'*/}
-                                        <PencilSquareIcon className="h-5 w-10" />
-                                        <span>EDIT</span>
-                                    </button>
-                                </td>
-                                <td >
-                                    <button className="flex items-center p-2 text-white bg-red-600" onClick={() => handleDelete(object)}>
-                                        <TrashIcon className="h-5 w-5" />
-                                        <span>DELETE</span>
-                                    </button>
-                                </td>
-                            </tr>);
-                    })}
+                    {
+                        genericDisplayDataMethods.displayData(objects, theader, type, handleEdit, handleDelete)
+                    }
                 </tbody>
             </table>
         </div>

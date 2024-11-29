@@ -1,5 +1,5 @@
 ﻿.app-layout {
-    //height: 100%; /*100% instead of  100vp helps in scroll and nav bar sticking. Not sure I didn't see it happening. Putting here for info. */
+    height: 100%; /*100% instead of  100vp helps in scroll and nav bar sticking. Not sure I didn't see it happening. Putting here for info. */
     width: 100%;
     min-height: 100vh;
 }

@@ -15,6 +15,7 @@ import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
 import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
+import Loading from '../components/Loading';
 
 const Product = () => {
     const dispatch = useDispatch();
@@ -50,10 +51,8 @@ const Product = () => {
 
             dispatch(setProducts(productsData.dtos));
             dispatch(setTotalCountProduct(productsData.totalCount));
-            console.log("Product state updated:");
 
         } catch (errors) {
-            console.log(errors);
             dispatch(setError(`Failed to fetch product ${errors}`));
             setTimeout(() => {
                 dispatch(setError(''));
@@ -69,7 +68,7 @@ const Product = () => {
     }, [fetchProductDetails, addVisible, editVisible, deleteVisible]);
 
     if (loading) {
-        return <p><em>Loading...</em></p>;
+        return <Loading />;
     }
 
     return (

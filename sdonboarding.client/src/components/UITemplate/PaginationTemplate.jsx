@@ -15,16 +15,32 @@ const PaginationTemplate = ({ type }) => {
 
     const { totalCount, pageSize, currentPage } = useGetObjectDetails(type);
 
+    if (!totalCount || !pageSize || !currentPage) {
+        if (process.env.NODE_ENV !== 'production') {
+            console.error("No totalCount, pageSize and currentPage values.");
+        }
+        return;
+    }
     /**handle pagechange from dropdown. This will change the number of records in the page
      * and will reset the current page to 1.
      * */
     const handlePageSizeChange = (e) => {
+        if (!pageSize || !currentPage) {
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("No pageSize and currentPage values.");
+            }
+        }
         setPageSize({ pageSize: Number(e.target.value), type }); // Set the page size based on the dropdown selection
         setCurrentPage({ currentPage: 1, type }); // Reset to first page when page size is changed
     };
 
     // Handle page number click
     const handlePageClick = (page) => {
+        if (!page) {
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("No pageSize and currentPage values.");
+            }
+        }
         setCurrentPage({ currentPage: page, type }); // Change to the selected page number
     };
 

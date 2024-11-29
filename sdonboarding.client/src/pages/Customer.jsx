@@ -17,6 +17,7 @@ import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
 import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
+import Loading from '../components/Loading';
 
 const Customer = () => {
     const dispatch = useDispatch();
@@ -39,7 +40,6 @@ const Customer = () => {
     //function makes create customer(AddDataTemplate) component visible
     const handleNewCustomerClick = () => {
         dispatch(toggleAddVisibilityCustomer(true));
-        console.log(addVisible); // Might log the old state due to async nature
     };
 
     //Fetch the customers details from server and set the customers and totalCount in redux store.
@@ -53,10 +53,8 @@ const Customer = () => {
 
             dispatch(setCustomers(customersData.dtos));
             dispatch(setTotalCountCustomer(customersData.totalCount));
-            console.log("Customer state updated:");
 
         } catch (errors) {
-            console.log(errors);
             dispatch(setError(`Failed to fetch customer ${errors}`));
             setTimeout(() => {
                 dispatch(setError(''));
@@ -73,7 +71,7 @@ const Customer = () => {
     }, [fetchCustomerDetails, addVisible, editVisible, deleteVisible]);
 
     if (loading) {
-        return <p><em>Loading...</em></p>;
+        return <Loading />;
     }
 
     return (

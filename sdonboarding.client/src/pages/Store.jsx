@@ -17,6 +17,7 @@ import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
 import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
+import Loading from '../components/Loading';
 
 const Store = () => {
     const dispatch = useDispatch();
@@ -39,7 +40,6 @@ const Store = () => {
     //function makes create store(AddDataTemplate) component visible
     const handleNewStoreClick = () => {
         dispatch(toggleAddVisibilityStore(true));
-        console.log(addVisible); // Might log the old state due to async nature
     };
 
     //Fetch the stores details from server and set the stores and totalCount in redux store.
@@ -53,10 +53,8 @@ const Store = () => {
 
             dispatch(setStores(storesData.dtos));
             dispatch(setTotalCountStore(storesData.totalCount));
-            console.log("Store state updated:");
 
         } catch (errors) {
-            console.log(errors);
             dispatch(setError(`Failed to fetch store ${errors}`));
             setTimeout(() => {
                 dispatch(setError(''));
@@ -72,7 +70,7 @@ const Store = () => {
     }, [fetchStoreDetails, addVisible, editVisible, deleteVisible]);
 
     if (loading) {
-        return <p><em>Loading...</em></p>;
+        return <Loading />;
     }
 
     return (

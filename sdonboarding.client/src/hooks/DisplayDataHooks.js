@@ -9,6 +9,7 @@ import { setEditCustomer, toggleEditVisibilityCustomer, setDeleteCustomer, toggl
 import { setEditStore, toggleEditVisibilityStore, setDeleteStore, toggleDeleteVisibilityStore } from '../redux/slices/storeSlice';
 import { setEditSale, toggleEditVisibilitySale, setDeleteSale, toggleDeleteVisibilitySale } from '../redux/slices/saleSlice';
 import { useCallback } from 'react';
+import genericMethods from '../utils/GenericMethods';
 
 /**
  * This hook is used for getting the records fetch by pages from respective stores.
@@ -23,14 +24,24 @@ export const useGetDisplayObject = (type) => {
     const stores = useSelector((state) => state.storeDetails.stores);
     const sales = useSelector((state) => state.saleDetails.sales);
 
-    if (type === ObjectTypes.Customer) {
-        return customers;
-    } else if (type === ObjectTypes.Product) {
-        return products;
-    } else if (type === ObjectTypes.Store) {
-        return stores;
-    } else if (type === ObjectTypes.Sale) {
-        return sales;
+    switch (type) {
+        case ObjectTypes.Customer:
+            return customers;
+            break;
+        case ObjectTypes.Product:
+            return products;
+            break;
+        case ObjectTypes.Store:
+            return stores;
+            break;
+        case ObjectTypes.Sale:
+            return sales;
+            break;
+        default:
+            //nothing to clear
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Wrong type passed to useGetDisplayObject.");
+            }
     }
 };
 
@@ -44,20 +55,28 @@ export const useSetEditObject = (type) => {
     const dispatch = useDispatch();
 
     const setEditDisplay = (object) => {
-        if (type === 'Product') {
-            dispatch(setEditProduct(object)); 
-            dispatch(toggleEditVisibilityProduct(true));
-        } else if (type === 'Customer') {
-            dispatch(setEditCustomer(object)); 
-            dispatch(toggleEditVisibilityCustomer(true));
-
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setEditStore(object)); 
-            dispatch(toggleEditVisibilityStore(true));
-
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setEditSale(object));
-            dispatch(toggleEditVisibilitySale(true));
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setEditCustomer(object));
+                dispatch(toggleEditVisibilityCustomer(true));
+                break;
+            case ObjectTypes.Product:
+                dispatch(setEditProduct(object));
+                dispatch(toggleEditVisibilityProduct(true));
+                break;
+            case ObjectTypes.Store:
+                dispatch(setEditStore(object));
+                dispatch(toggleEditVisibilityStore(true));
+                break;
+            case ObjectTypes.Sale:
+                dispatch(setEditSale(object));
+                dispatch(toggleEditVisibilitySale(true));
+                break;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to setEditDisplay.");
+                }
         }
     };
 
@@ -73,18 +92,28 @@ export const useSetDeleteObject = (type) => {
     const dispatch = useDispatch();
 
     const setDeleteDisplay = (object) => {
-        if (type === 'Product') {
-            dispatch(setDeleteProduct(object));
-            dispatch(toggleDeleteVisibilityProduct(true));
-        } else if (type === 'Customer') {
-            dispatch(setDeleteCustomer(object)); 
-            dispatch(toggleDeleteVisibilityCustomer(true));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setDeleteStore(object));
-            dispatch(toggleDeleteVisibilityStore(true));
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setDeleteSale(object));
-            dispatch(toggleDeleteVisibilitySale(true));
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setDeleteCustomer(object));
+                dispatch(toggleDeleteVisibilityCustomer(true));
+                break;
+            case ObjectTypes.Product:
+                dispatch(setDeleteProduct(object));
+                dispatch(toggleDeleteVisibilityProduct(true));
+                break;
+            case ObjectTypes.Store:
+                dispatch(setDeleteStore(object));
+                dispatch(toggleDeleteVisibilityStore(true));
+                break;
+            case ObjectTypes.Sale:
+                dispatch(setDeleteSale(object));
+                dispatch(toggleDeleteVisibilitySale(true));
+                break;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to setDeleteDisplay.");
+                }
         }
     };
 
@@ -92,6 +121,11 @@ export const useSetDeleteObject = (type) => {
 };
 
 const sortList = (array, key, orderAsc = true) => {
+    const valid = genericMethods.handleMissingField({ array, key });
+    if (!valid) {
+        // no values to sort..
+        return null;
+    }
     return (
         [...array].sort((a, b) => typeof a[key] === 'number' ? orderAsc ? a[key] - b[key] : b[key] - a[key] :
             typeof a[key] === 'string' ? orderAsc ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]) :
@@ -105,16 +139,26 @@ export const useGetSortListAsc = (type) => {
     const stores = useSelector((state) => state.storeDetails.stores);
     const sales = useSelector((state) => state.saleDetails.sales);
 
+    // Function will return null if no values to sort. handle the null behavior in the calling code.
     const getSortListAsc = useCallback((key) => {
-        if (type === ObjectTypes.Customer) {
-
-            return sortList(customers, key, true);
-        } else if (type === ObjectTypes.Product) {
-            return sortList(products, key, true);
-        } else if (type === ObjectTypes.Store) {
-            return sortList(stores, key, true);
-        } else if (type === ObjectTypes.Sale) {
-            return sortList(sales, key, true);
+        switch (type) {
+            case ObjectTypes.Customer:
+                return sortList(customers, key, true);
+                break;
+            case ObjectTypes.Product:
+                return sortList(products, key, true);
+                break;
+            case ObjectTypes.Store:
+                return sortList(stores, key, true);
+                break;
+            case ObjectTypes.Sale:
+                return sortList(sales, key, true);
+                break;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed in getSortListAsc.");
+                }
         }
     }, [type, customers, products, stores, sales]);
 
@@ -128,14 +172,24 @@ export const useGetSortListDesc = (type) => {
     const sales = useSelector((state) => state.saleDetails.sales);
 
     const getSortListDesc = useCallback((key) => {
-        if (type === ObjectTypes.Customer) {
-            return sortList(customers, key, false);
-        } else if (type === ObjectTypes.Product) {
-            return sortList(products, key, false);
-        } else if (type === ObjectTypes.Store) {
-            return sortList(stores, key, false);
-        } else if (type === ObjectTypes.Sale) {
-            return sortList(sales, key, false);
+        switch (type) {
+            case ObjectTypes.Customer:
+                return sortList(customers, key, false);
+                break;
+            case ObjectTypes.Product:
+                return sortList(products, key, false);
+                break;
+            case ObjectTypes.Store:
+                return sortList(stores, key, false);
+                break;
+            case ObjectTypes.Sale:
+                return sortList(sales, key, false);
+                break;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed getSortListDesc.");
+                }
         }
     }, [type, customers, products, stores, sales]);
 

@@ -5,15 +5,16 @@
  */
 
 import PropTypes from "prop-types";
+import { MessageTypes } from '../utils/GenericObjects';
 
 const Message = ({ type, message }) => {
     let messageClass = '';
 
-    if (type === 'error') {
+    if (type === MessageTypes.error) {
         messageClass = 'text-red-500 bg-red-100 border-red-500';
-    } else if (type === 'success') {
+    } else if (type === MessageTypes.success) {
         messageClass = 'text-green-500 text-green-100 border-green-500';
-    } else if (type === ' loading') {
+    } else if (type === MessageTypes.loading) {
         messageClass = 'text-blue-500 bg-blue-100 border-blue-500';
     }
 
@@ -26,7 +27,7 @@ const Message = ({ type, message }) => {
 
 //PropTypes Validation
 Message.propTypes = {
-    type: PropTypes.oneOf(['error', 'success', 'loading']).isRequired,
+    type: PropTypes.oneOf(Object.values(MessageTypes)).isRequired,
     message: PropTypes.string.isRequired,
 }
 

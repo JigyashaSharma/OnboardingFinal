@@ -13,14 +13,20 @@ export const useSetCurrentPage = () => {
     const dispatch = useDispatch();
 
     const setCurrentPage = ({ currentPage, type }) => {
-        if (type === ObjectTypes.Customer) {
-            dispatch(setCurrentPageCustomer(currentPage));
-        } else if (type === ObjectTypes.Product) {
-            dispatch(setCurrentPageProduct(currentPage));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setCurrentPageStore(currentPage));
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setCurrentPageSale(currentPage));
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setCurrentPageCustomer(currentPage));
+            case ObjectTypes.Product:
+                dispatch(setCurrentPageProduct(currentPage));
+            case ObjectTypes.Store:
+                dispatch(setCurrentPageStore(currentPage));
+            case ObjectTypes.Sale:
+                dispatch(setCurrentPageSale(currentPage));
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to setCurrentPage.");
+                }
         }
     };
 
@@ -35,14 +41,20 @@ export const useSetPageSize = () => {
     const dispatch = useDispatch();
 
     const setPageSize = ({ pageSize, type }) => {
-        if (type === ObjectTypes.Customer) {
-            dispatch(setPageSizeCustomer(pageSize));
-        } else if (type === ObjectTypes.Product) {
-            dispatch(setPageSizeProduct(pageSize));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setPageSizeStore(pageSize));;
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setPageSizeSale(pageSize));
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setPageSizeCustomer(pageSize));
+            case ObjectTypes.Product:
+                dispatch(setPageSizeProduct(pageSize));
+            case ObjectTypes.Store:
+                dispatch(setPageSizeStore(pageSize));
+            case ObjectTypes.Sale:
+                dispatch(setPageSizeSale(pageSize));
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to setPageSize.");
+                }
         }
     }
 
@@ -57,42 +69,60 @@ export const useSetPageSize = () => {
 export const useGetObjectDetails = (type) => {
     // Accessing Redux state based on object type
     const totalCount = useSelector((state) => {
-        if (type === ObjectTypes.Customer) {
-            return state.customerDetails.totalCount;
-        } else if (type === ObjectTypes.Product) {
-            return state.productDetails.totalCount;
-        } else if (type === ObjectTypes.Store) {
-            return state.storeDetails.totalCount;
-        } else if (type === ObjectTypes.Sale) {
-            return state.saleDetails.totalCount;
+        switch (type) {
+            case ObjectTypes.Customer:
+                return state.customerDetails.totalCount;
+            case ObjectTypes.Product:
+                return state.productDetails.totalCount;
+            case ObjectTypes.Store:
+                return state.storeDetails.totalCount;
+            case ObjectTypes.Sale:
+                return state.saleDetails.totalCount;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to useGetObjectDetails.");
+                }
+                return null;
         }
-        return 0; // Default case
     });
 
     const pageSize = useSelector((state) => {
-        if (type === ObjectTypes.Customer) {
-            return state.customerDetails.pageSize;
-        } else if (type === ObjectTypes.Product) {
-            return state.productDetails.pageSize;
-        } else if (type === ObjectTypes.Store) {
-            return state.storeDetails.pageSize;
-        } else if (type === ObjectTypes.Sale) {
-            return state.saleDetails.pageSize;
+        switch (type) {
+            case ObjectTypes.Customer:
+                return state.customerDetails.pageSize;
+            case ObjectTypes.Product:
+                return state.productDetails.pageSize;
+            case ObjectTypes.Store:
+                return state.storeDetails.pageSize;
+            case ObjectTypes.Sale:
+                return state.saleDetails.pageSize;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to useGetObjectDetails.");
+                }
+                return null;
         }
-        return 0; // Default case
     });
 
     const currentPage = useSelector((state) => {
-        if (type === ObjectTypes.Customer) {
-            return state.customerDetails.currentPage;
-        } else if (type === ObjectTypes.Product) {
-            return state.productDetails.currentPage;
-        } else if (type === ObjectTypes.Store) {
-            return state.storeDetails.currentPage;
-        } else if (type === ObjectTypes.Sale) {
-            return state.saleDetails.currentPage;
+        switch (type) {
+            case ObjectTypes.Customer:
+                return state.customerDetails.currentPage;
+            case ObjectTypes.Product:
+                return state.productDetails.currentPage;
+            case ObjectTypes.Store:
+                return state.storeDetails.currentPage;
+            case ObjectTypes.Sale:
+                return state.saleDetails.currentPage;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to useGetObjectDetails.");
+                }
+                return null;
         }
-        return 0; // Default case
     });
 
     return { totalCount, pageSize, currentPage };

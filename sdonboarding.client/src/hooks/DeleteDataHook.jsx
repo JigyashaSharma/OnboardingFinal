@@ -24,16 +24,21 @@ import saleApiServices from '../services/saleServices';
 export const useGetDeleteObject = (type ) => {
     
     const deleteObject = useSelector((state) => {
-        if (type === ObjectTypes.Customer) {
-            return state.customerDetails.customerToDelete;
-        } else if (type === ObjectTypes.Product) {
-            return state.productDetails.productToDelete;
-        } else if (type === ObjectTypes.Store) {
-            return state.storeDetails.storeToDelete;
-        } else if (type === ObjectTypes.Sale) {
-            return state.saleDetails.saleToDelete;
+        switch (type) {
+            case ObjectTypes.Customer:
+                return state.customerDetails.customerToDelete;
+            case ObjectTypes.Product:
+                return state.productDetails.productToDelete;
+            case ObjectTypes.Store:
+                return state.storeDetails.storeToDelete;
+            case ObjectTypes.Sale:
+                return state.saleDetails.saleToDelete;
+            default:
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to fetch the object to delete.");
+                }
+                return null;
         }
-        return {}; // Default case
     });
 
     return (deleteObject);
@@ -48,19 +53,28 @@ export const useDeleteCancel = (type) => {
     const dispatch = useDispatch();
 
     const deleteCancel = () => {
-        if (type === ObjectTypes.Customer) {
-            dispatch(setDeleteCustomer(null));
-            dispatch(toggleDeleteVisibilityCustomer(false));
-        } else if (type === ObjectTypes.Product) {
-            dispatch(setDeleteProduct(null));
-            dispatch(toggleDeleteVisibilityProduct(false));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setDeleteStore(null));
-            dispatch(toggleDeleteVisibilityStore(false));
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setDeleteSale(null));
-            dispatch(toggleDeleteVisibilitySale(false));
-        } 
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setDeleteCustomer(null));
+                dispatch(toggleDeleteVisibilityCustomer(false));
+                break;
+            case ObjectTypes.Product:
+                dispatch(setDeleteProduct(null));
+                dispatch(toggleDeleteVisibilityProduct(false));
+                break;
+            case ObjectTypes.Store:
+                dispatch(setDeleteStore(null));
+                dispatch(toggleDeleteVisibilityStore(false));
+                break;
+            case ObjectTypes.Sale:
+                dispatch(setDeleteSale(null));
+                dispatch(toggleDeleteVisibilitySale(false));
+                break;
+            default:
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed. Nothing to cancel.");
+                }
+        }
     };
 
     return deleteCancel;
@@ -78,15 +92,21 @@ export const useSendDeleteRequest = (deleteObject, type) => {
 
     const sendDeleteRequest = async () => {
         try {
-            if (type === ObjectTypes.Customer) {
-                await customerApiServices.deleteCustomer(deleteObject.id);
-
-            } else if (type === ObjectTypes.Product) {
-                await productApiServices.deleteProduct(deleteObject.id);
-            } else if (type === ObjectTypes.Store) {
-                await storeApiServices.deleteStore(deleteObject.id);
-            } else if (type === ObjectTypes.Sale) {
-                await saleApiServices.deleteSale(deleteObject.id);
+            switch (type) {
+                case ObjectTypes.Customer:
+                    await customerApiServices.deleteCustomer(deleteObject.id);
+                    break;
+                case ObjectTypes.Product:
+                    await productApiServices.deleteProduct(deleteObject.id);
+                    break;
+                case ObjectTypes.Store:
+                    await storeApiServices.deleteStore(deleteObject.id);
+                    break;
+                case ObjectTypes.Sale:
+                    await saleApiServices.deleteSale(deleteObject.id);
+                    break;
+                default:
+                    throw error("Type unknown to delete the object.");
             }
 
             dispatch(setSuccess(`${type} deleted successfully`));
@@ -95,24 +115,39 @@ export const useSendDeleteRequest = (deleteObject, type) => {
             }, 10000);
 
         } catch (error) {
-            dispatch(setError(`Failed to delete ${type}: ${error}`));
+            if (error.message) {
+                dispatch(setError(`${error.message}`));
+            } else {
+                dispatch(setError(`Failed to delete ${type}`));
+            }
+            
             setTimeout(() => {
                 dispatch(setError(''));
             }, 10000);
 
         } finally {
-            if (type === ObjectTypes.Customer) {
-                dispatch(setDeleteCustomer(null));
-                dispatch(toggleDeleteVisibilityCustomer(false));
-            } else if (type === ObjectTypes.Product) {
-                dispatch(setDeleteProduct(null));
-                dispatch(toggleDeleteVisibilityProduct(false));
-            } else if (type === ObjectTypes.Store) {
-                dispatch(setDeleteStore(null));
-                dispatch(toggleDeleteVisibilityStore(false));
-            } else if (type === ObjectTypes.Sale) {
-                dispatch(setDeleteSale(null));
-                dispatch(toggleDeleteVisibilitySale(false));
+            switch (type) {
+                case ObjectTypes.Customer:
+                    dispatch(setDeleteCustomer(null));
+                    dispatch(toggleDeleteVisibilityCustomer(false));
+                    break;
+                case ObjectTypes.Product:
+                    dispatch(setDeleteProduct(null));
+                    dispatch(toggleDeleteVisibilityProduct(false));
+                    break;
+                case ObjectTypes.Store:
+                    dispatch(setDeleteStore(null));
+                    dispatch(toggleDeleteVisibilityStore(false));
+                    break;
+                case ObjectTypes.Sale:
+                    dispatch(setDeleteSale(null));
+                    dispatch(toggleDeleteVisibilitySale(false));
+                    break;
+                default:
+                    //nothing to clear
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.error("Wrong type passed. Nothing to clear for delete.");
+                    }
             }
         }
     };

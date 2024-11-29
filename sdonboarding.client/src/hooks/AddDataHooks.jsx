@@ -21,35 +21,52 @@ export const useSendAddRequest = (addObject, type) => {
     const dispatch = useDispatch();
     const sendAddRequest = async () => {
         try {
-            if (type === ObjectTypes.Customer) {
-                await customerApiServices.createCustomer(addObject);
-
-            } else if (type === ObjectTypes.Product) {
-                await productApiServices.createProduct(addObject);
-            } else if (type === ObjectTypes.Store) {
-                await storeApiServices.createStore(addObject);
-            } else if (type === ObjectTypes.Sale) {
-                await saleApiServices.createSale(addObject);
+            switch (type) {
+                case ObjectTypes.Customer:
+                    await customerApiServices.createCustomer(addObject);
+                    break;
+                case ObjectTypes.Product:
+                    await productApiServices.createProduct(addObject);
+                    break;
+                case ObjectTypes.Store:
+                    await storeApiServices.createStore(addObject);
+                    break;
+                case ObjectTypes.Sale:
+                    await saleApiServices.createSale(addObject);
+                    break;
+                default:
+                    throw error("Type unknown to create the object.");
             }
 
             dispatch(setSuccess(`${type} added successfully`));
             setTimeout(() => {
                 dispatch(setSuccess(""));
             }, 10000);
+
         } catch (error) {
             dispatch(setError(`Failed to add product ${error}`));
             setTimeout(() => {
                 dispatch(setError(''));
             }, 10000);
         } finally {
-            if (type === ObjectTypes.Customer) {
-                dispatch(toggleAddVisibilityCustomer(false));
-            } else if (type === ObjectTypes.Product) {
-                dispatch(toggleAddVisibilityProduct(false));
-            } else if (type === ObjectTypes.Store) {
-                dispatch(toggleAddVisibilityStore(false));
-            } else if (type === ObjectTypes.Sale) {
-                dispatch(toggleAddVisibilitySale(false));
+            switch (type) {
+                case ObjectTypes.Customer:
+                    dispatch(toggleAddVisibilityCustomer(false));
+                    break;
+                case ObjectTypes.Product:
+                    dispatch(toggleAddVisibilityProduct(false));
+                    break;
+                case ObjectTypes.Store:
+                    dispatch(toggleAddVisibilityStore(false));
+                    break;
+                case ObjectTypes.Sale:
+                    dispatch(toggleAddVisibilitySale(false));
+                    break;
+                default:
+                //nothing to clear
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.error("Wrong type passed. Nothing to clear.");
+                    }
             }
         }
     };
@@ -62,14 +79,24 @@ export const useAddCancel = (type) => {
     const dispatch = useDispatch();
 
     const addCancel = () => {
-        if (type === ObjectTypes.Customer) {
-            dispatch(toggleAddVisibilityCustomer(false));
-        } else if (type === ObjectTypes.Product) {
-            dispatch(toggleAddVisibilityProduct(false));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(toggleAddVisibilityStore(false));
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(toggleAddVisibilitySale(false));
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(toggleAddVisibilityCustomer(false));
+                break;
+            case ObjectTypes.Product:
+                dispatch(toggleAddVisibilityProduct(false));
+                break;
+            case ObjectTypes.Store:
+                dispatch(toggleAddVisibilityStore(false));
+                break;
+            case ObjectTypes.Sale:
+                dispatch(toggleAddVisibilitySale(false));
+                break;
+            default:
+            //nothing to toggle. just log in dev
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed. Nothing to cancel.");
+                }
         }
     };
 

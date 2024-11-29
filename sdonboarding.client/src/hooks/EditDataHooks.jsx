@@ -22,16 +22,22 @@ import saleApiServices from '../services/saleServices';
 export const useGetEditObject = (type) => {
 
     const editObject = useSelector((state) => {
-        if (type === ObjectTypes.Customer) {
-            return state.customerDetails.customerToEdit;
-        } else if (type === ObjectTypes.Product) {
-            return state.productDetails.productToEdit;
-        } else if (type === ObjectTypes.Store) {
-            return state.storeDetails.storeToEdit;
-        } else if (type === ObjectTypes.Sale) {
-            return state.saleDetails.saleToEdit;
+        switch (type) {
+            case ObjectTypes.Customer:
+                return state.customerDetails.customerToEdit;
+            case ObjectTypes.Product:
+                return state.productDetails.productToEdit;
+            case ObjectTypes.Store:
+                return state.storeDetails.storeToEdit;
+            case ObjectTypes.Sale:
+                return state.saleDetails.saleToEdit;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed. to fetch the object");
+                }
+                return null;
         }
-        return {}; // Default case
     });
 
     return (editObject);
@@ -47,42 +53,57 @@ export const useSendEditRequest = (editObject, type) => {
 
     const dispatch = useDispatch();
      const sendEditRequest = async () => {
-            try {
-                if (type === ObjectTypes.Customer) {
+         try {
+             switch (type) {
+                 case ObjectTypes.Customer:
                      await customerApiServices.editCustomer(editObject);
-
-                } else if (type === ObjectTypes.Product) {
-                    await productApiServices.editProduct(editObject);
-                } else if (type === ObjectTypes.Store) {
-                    await storeApiServices.editStore(editObject);
-                } else if (type === ObjectTypes.Sale) {
-                    await saleApiServices.editSale(editObject);
-                }
-
-                dispatch(setSuccess(`${type} edited successfully`));
-                setTimeout(() => {
-                    dispatch(setSuccess(""));
-                }, 10000);
-            } catch (error) {
-                dispatch(setError(`Failed to edit product ${error}`));
-                setTimeout(() => {
-                    dispatch(setError(''));
-                }, 10000);
-            } finally {
-                if (type === ObjectTypes.Customer) {
-                    dispatch(setEditCustomer(null));
-                    dispatch(toggleEditVisibilityCustomer(false));
-                } else if (type === ObjectTypes.Product) {
-                    dispatch(setEditProduct(null));
-                    dispatch(toggleEditVisibilityProduct(false));
-                } else if (type === ObjectTypes.Store) {
-                    dispatch(setEditStore(null));
-                    dispatch(toggleEditVisibilityStore(false));
-                } else if (type === ObjectTypes.Sale) {
-                    dispatch(setEditSale(null));
-                    dispatch(toggleEditVisibilitySale(false));
-                }               
-            }
+                     break;
+                 case ObjectTypes.Product:
+                     await productApiServices.editProduct(editObject);
+                     break;
+                 case ObjectTypes.Store:
+                     await storeApiServices.editStore(editObject);
+                     break;
+                 case ObjectTypes.Sale:
+                     await saleApiServices.editSale(editObject);
+                     break;
+                 default:
+                     throw error("Wrong type passed to sendEditRequest");
+             }
+             dispatch(setSuccess(`${type} edited successfully`));
+             setTimeout(() => {
+                 dispatch(setSuccess(""));
+             }, 10000);
+         } catch (error) {
+             dispatch(setError(`Failed to edit product ${error}`));
+             setTimeout(() => {
+                 dispatch(setError(''));
+             }, 10000);
+         } finally {
+             switch (type) {
+                 case ObjectTypes.Customer:
+                     dispatch(setEditCustomer(null));
+                     dispatch(toggleEditVisibilityCustomer(false));
+                     break;
+                 case ObjectTypes.Product:
+                     dispatch(setEditProduct(null));
+                     dispatch(toggleEditVisibilityProduct(false));
+                     break;
+                 case ObjectTypes.Store:
+                     dispatch(setEditStore(null));
+                     dispatch(toggleEditVisibilityStore(false));
+                     break;
+                 case ObjectTypes.Sale:
+                     dispatch(setEditSale(null));
+                     dispatch(toggleEditVisibilitySale(false));
+                     break;
+                 default:
+                     //nothing to clear
+                     if (process.env.NODE_ENV !== 'production') {
+                         console.error("Wrong type passed to useSendEditRequest. nothing to clear in finally");
+                     }
+             }
+         }
     };
 
     return sendEditRequest;  
@@ -93,19 +114,29 @@ export const useEditCancel = (type) => {
     const dispatch = useDispatch();
 
     const editCancel = () => {
-        if (type === ObjectTypes.Customer) {
-            dispatch(setEditCustomer(null));
-            dispatch(toggleEditVisibilityCustomer(false));
-        } else if (type === ObjectTypes.Product) {
-            dispatch(setEditProduct(null));
-            dispatch(toggleEditVisibilityProduct(false));
-        } else if (type === ObjectTypes.Store) {
-            dispatch(setEditStore(null));
-            dispatch(toggleEditVisibilityStore(false))
-        } else if (type === ObjectTypes.Sale) {
-            dispatch(setEditSale(null));
-            dispatch(toggleEditVisibilitySale(false))
-        } 
+        switch (type) {
+            case ObjectTypes.Customer:
+                dispatch(setEditCustomer(null));
+                dispatch(toggleEditVisibilityCustomer(false));
+                break;
+            case ObjectTypes.Product:
+                dispatch(setEditProduct(null));
+                dispatch(toggleEditVisibilityProduct(false));
+                break;
+            case ObjectTypes.Store:
+                dispatch(setEditStore(null));
+                dispatch(toggleEditVisibilityStore(false))
+                break;
+            case ObjectTypes.Sale:
+                dispatch(setEditSale(null));
+                dispatch(toggleEditVisibilitySale(false))
+                break;
+            default:
+                //nothing to clear
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("Wrong type passed to editCancel.");
+                }
+        }
     };
 
     return editCancel;

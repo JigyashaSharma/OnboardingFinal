@@ -17,6 +17,7 @@ import Footer from '../components/Footer';
 import AddDataTemplate from '../components/UITemplate/AddDataTemplate';
 import EditProductTemplate from '../components/UITemplate/EditDataTemplate';
 import DeleteDataTemplate from '../components/UITemplate/DeleteDataTemplate';
+import Loading from '../components/Loading';
 
 const Sale = () => {
     const dispatch = useDispatch();
@@ -39,7 +40,6 @@ const Sale = () => {
     //function makes create sale(AddDataTemplate) component visible
     const handleNewSaleClick = () => {
         dispatch(toggleAddVisibilitySale(true));
-        console.log(addVisible); // Might log the old state due to async nature
     };
 
     //Fetch the sales details from server and set the sales and totalCount in redux store
@@ -53,10 +53,8 @@ const Sale = () => {
 
             dispatch(setSales(salesData.dtos));
             dispatch(setTotalCountSale(salesData.totalCount));
-            console.log("Sale state updated:");
 
         } catch (errors) {
-            console.log(errors);
             dispatch(setError(`Failed to fetch sale ${errors}`));
             setTimeout(() => {
                 dispatch(setError(''));
@@ -72,7 +70,7 @@ const Sale = () => {
     }, [fetchSaleDetails, addVisible, editVisible, deleteVisible]);
 
     if (loading) {
-        return <p><em>Loading...</em></p>;
+        return <Loading />;
     }
 
     return (

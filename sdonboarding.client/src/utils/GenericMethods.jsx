@@ -183,7 +183,183 @@ const genericMethods = {
         }
 
         return fromValid;
-    }
+    },
+    /**
+     * @param params : list of variables that we want to validate if they have proper value.
+     * @returns : true if the list has values else false.
+     */
+    handleMissingField(params) {
+        // Loop through the params object and check for missing values
+        const valid = Object.values(params).map((value) => {
+            if(!value) {
+                // In development or staging environments, log an error with missing field details
+                if (process.env.NODE_ENV !== 'production') {
+                    const error = new Error("Missing required parameter(s)");
+                    console.error("Missing required parameter(s)", error.stack);
+                }
+                //returning
+                return false; // this tell error
+            }
+        });
+
+        // Return false if all required fields are present
+        return !valid.includes(false);
+    },
+    /**
+     * @param  key
+     * @param localObject
+     * @param objectOptionList
+     * @param objectType
+     * @param handleListFunction
+     * @returns: Select tag with list of objectOptionList passed example: customer/product/store
+     */
+    generateSelect(key, localObject, objectOptionList, objectType, handleListFunction) {
+        if (!key || !localObject || !objectOptionList || !objectType || !handleListFunction) {
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Missing required parameter(s) in generateSelect function");
+            }
+            //returning disabled select if any parameter is not passed
+            return <select disabled></select>;
+        }
+        return (
+            <select
+                name={key}
+                id={key}
+                value={localObject[key]}
+                onChange={(e) => this.handleSelectChange(e, handleListFunction)}
+                className="w-full px-4 py-2 border rounded text-gray-400"
+                required
+            >
+                <option value="" disabled></option>
+                {objectOptionList && objectOptionList.length > 0 ? (
+                    objectOptionList.map((object) => {
+                        return (
+                            <option key={object.id}
+                                value={object.name}
+                                data-id={object.id}
+                                data-type={objectType}
+                            >
+                                {object.name}
+                            </option>)
+                    })) : (
+                    <option disabled>No options available</option>
+                )}
+
+            </select>
+        );
+    },
+    /**
+     * @param e: event argsfrom form
+     * @param handleListFunction : function to call.
+     */
+    handleSelectChange(e, handleListFunction) {
+        // Check if selectedOptions exists and has at least one option
+        const selectedOption = e.target.selectedOptions[0];
+
+        if (selectedOption) {
+            // If selectedOption exists, call handleListFunction with the selected data
+            handleListFunction(selectedOption.dataset.id, selectedOption.value, selectedOption.dataset.type);
+        } else {
+            // In production, do not log to the console
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("No option selected"); // Log in development or staging environments
+            }
+
+            // Or in prod, display a user-friendly error message (e.g., toast or alert) or may not do anything
+            //adding alert for now
+            alert("Please select a valid option"); // Or we can set an error state and display an inline error message
+        }
+    },
+    /**
+     * @param key : key to set for tag id, name.
+     * @param object : for which we are creating tag, will give default value.
+     * @param handleInputChange : function to call onChange.
+     * @returns : returns input tag for Date.
+     */
+    getDateDisplay(key, object, handleInputChange) {
+        if (!key || !object || !handleInputChange) {
+            // In production, do not log to the console
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Date not proper."); // Log in development or staging environments
+            }
+
+            // Or in prod, display a user-friendly error message (e.g., toast or alert) or may not do anything
+            //adding alert for now
+            alert("Date value not proper"); // Or we can set an error state and display an inline error message
+        }
+        return (
+            < input
+                type="date"
+                name={key}
+                id={key}
+                value={object[key].split('T')[0]}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded text-gray-500"
+            />
+        );
+    },
+    /**
+     * @param key : key to set for tag id, name.
+     * @param object : for which we are creating tag, will give default value.
+     * @param handleInputChange : function to call onChange.
+     * @returns : returns input tag for Text.
+     */
+    getTextInputDisplay(key, object, labels, handleInputChange) {
+        if (!key || !object || !labels || !handleInputChange) {
+            // In production, do not log to the console
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Text not proper."); // Log in development or staging environments
+            }
+
+            // Or in prod, display a user-friendly error message (e.g., toast or alert) or may not do anything
+            //adding alert for now
+            alert("Text value not proper"); // Or we can set an error state and display an inline error message
+        }
+        return (
+            <input
+                type="text"
+                name={key}
+                id={key}
+                value={object[key]}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded text-gray-400"
+                placeholder={`Enter ${labels[key]}`}
+                required
+            />
+        );
+    },
+    /**
+     * @param key : key to set for tag id, name.
+     * @param object : for which we are creating tag, will give default value.
+     * @param handleInputChange : function to call onChange.
+     * @returns : returns input tag for N umber.
+     */
+    getNumberDisplay(key, object, labels, handleInputChange) {
+        if (!key || !object || !labels || !handleInputChange) {
+            // In production, do not log to the console
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Number not proper."); // Log in development or staging environments
+            }
+
+            // Or in prod, display a user-friendly error message (e.g., toast or alert) or may not do anything
+            //adding alert for now
+            alert("Number value not proper"); // Or we can set an error state and display an inline error message
+        }
+        return (
+            <input
+                type="number"
+                name={key}
+                id={key}
+                value={object[key]}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded text-gray-400"
+                step="any"
+                min="0"
+                placeholder={`Enter ${labels[key]}`}
+                required
+            />
+        );
+    },
 }
 
 export default genericMethods;

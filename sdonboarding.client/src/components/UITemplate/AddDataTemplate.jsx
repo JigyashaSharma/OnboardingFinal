@@ -18,7 +18,7 @@ import genericMethods from '../../utils/GenericMethods';
 const AddDataTemplate = ({ type }) => {
 
     const dispatch = useDispatch();
-    const { labels, initObject, formElementType } = genericAddDataMethods.getInitLocalObject(type);
+    const { labels = {}, initObject = {}, formElementType = [] } = genericAddDataMethods.getInitLocalObject(type) || {};
 
     const [localObject, setLocalObject] = useState(initObject);
     /* custom hooks */
@@ -36,25 +36,16 @@ const AddDataTemplate = ({ type }) => {
         try {
             if (type === ObjectTypes.Sale) {
                 const { customers, products, stores } = await getOtherObjectsData();
+                if (!customers || !products || !stores) {
+                    throw error("Sale cannot be created. Check if customer/product/store are there.");
+                }
                 setLocalCustomers(customers);
                 setLocalProducts(products);
                 setLocalStores(stores);
-
-                //initialize localObject with proper values so that if there is no change triggered(onChange)
-                //we have the default first value to create the sale with
-                /*setLocalObject((prevState) => ({
-                    ...prevState,
-                    customerId: customers[0].id,
-                    customer: customers[0].name,
-                    productId: products[0].id,
-                    product: products[0].name,
-                    storeId: stores[0].id,
-                    store: stores[0].name,
-                }))*/
             }
             
         } catch (error) {
-            console.error('Error fetching data:', error);
+            //console.error('Error fetching data:', error);
             dispatch(setError('Error fetching data for Sales:', error));
         }
     }, [dispatch]);
@@ -67,6 +58,11 @@ const AddDataTemplate = ({ type }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        const valid = genericMethods.handleMissingField({ name, value });
+        if (!valid) {
+            alert("Missing value in form. Please try again.");
+            return;
+        }
         e.target.setCustomValidity('');
         setLocalObject((prevState) => ({
             ...prevState,
@@ -76,6 +72,12 @@ const AddDataTemplate = ({ type }) => {
 
     /*handle the product active dropdown value*/
     const handleActiveChange = (e) => {
+        const valid = genericMethods.handleMissingField({ active: e.target.value });
+        if (!valid) {
+            alert("Missing value in form. Please try again.");
+            return;
+        }
+        
         setLocalObject((prevState) => ({
             ...prevState,
             active: e.target.value === 'true'
@@ -83,26 +85,40 @@ const AddDataTemplate = ({ type }) => {
     };
 
     /*List Change handler, it will update localObject with ID and name as we select it from the dropdown*/
-    const handleListChange = (id, name, type) => {
-        const selectedType = type;
-        if (selectedType === 'Customer') {
-            setLocalObject((prevState) => ({
-                ...prevState,
-                customerId: id,
-                customer: name,
-            }))
-        } else if (selectedType === 'Product') {
-            setLocalObject((prevState) => ({
-                ...prevState,
-                productId: id,
-                product: name,
-            }))
-        } else if (selectedType === 'Store') {
-            setLocalObject((prevState) => ({
-                ...prevState,
-                storeId: id,
-                store: name,
-            }))
+    const handleListChange = (id, name, selectedType) => {
+        const valid = genericMethods.handleMissingField({ id, name, selectedType });
+        if (!valid) {
+            alert("Missing value in form. Please try again.");
+            return;
+        }
+        switch (selectedType) {
+            case ObjectTypes.Customer:
+                setLocalObject((prevState) => ({
+                    ...prevState,
+                    customerId: id,
+                    customer: name,
+                }));
+                break;
+            case ObjectTypes.Product:
+                setLocalObject((prevState) => ({
+                    ...prevState,
+                    productId: id,
+                    product: name,
+                }));
+                break;
+            case ObjectTypes.Store:
+                setLocalObject((prevState) => ({
+                    ...prevState,
+                    storeId: id,
+                    store: name,
+                }));
+                break;
+            default:
+                // In production, do not log to the console
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error("No option selected"); // Log in development or staging environments
+                }
+                //may be an alert in prod!!!
         }
     };
 
@@ -119,13 +135,16 @@ const AddDataTemplate = ({ type }) => {
         const valid = genericMethods.validateInputValuesOnSubmit(type);
 
         //Call the parent function for edit request to server
-        if (valid === true) {
+        if (valid) {
+            //function will do error handling and set the success and error message.
+            //Safe to just reset localObject and return in any case
             await handleAddSubmit();
             setLocalObject(null);
         } else {
-            console.log("Form is invalid");
+            if (process.env.NODE_ENV !== 'production') {
+                console.error("Something wrong with the form parameters.");
+            }
         }
-        
     };
 
      return (
@@ -140,137 +159,31 @@ const AddDataTemplate = ({ type }) => {
                 <form onSubmit={handleSubmit}>
                      <div className='mb-4'>
                          {/*keys of labels are object keys also that we need for creating object*/}
-                        {Object.keys(labels).map((key, index) => {
+                         {labels && localObject && formElementType  && Object.keys(labels).map((key, index) => {
                             return (
                                 <div key={key} className="flex flex-col">
                                     <label htmlFor={key} className='mt-2'>{labels[key]}</label>
-                                    {formElementType[index] === 'boolean' ? (
-                                        // Render dropdown for boolean fields (like 'active')
-                                        <select
-                                            name={key}
-                                            id={key}
-                                            value={localObject[key].toString()}
-                                            onChange={handleActiveChange}
-                                            className="w-full px-4 py-2 border rounded text-gray-400"
-                                            required
-                                        >
-                                            <option value={true}>Active</option>
-                                            <option value={false}>Inactive</option>
-                                        </select>
-                                    ) : formElementType[index] === 'customer' ? (
-                                            // Render dropdown for array
-                                            <select
-                                                name={key}
-                                                id={key}
-                                                value={localObject[key]}
-                                                onChange={(e) => {
-                                                    const selectedOption = e.target.selectedOptions[0];
-                                                    handleListChange(selectedOption.dataset.id, selectedOption.value, selectedOption.dataset.type);
-                                                }}
-                                                className="w-full px-4 py-2 border rounded text-gray-400"
-                                                required
-                                            >
-                                                <option value="" disabled></option>
-                                                {localCustomers && localCustomers.map((customer) => {
-                                                    console.log("name: ", customer.name)
-                                                    return(
-                                                        <option key={customer.id}
-                                                            value={customer.name} 
-                                                            data-id={customer.id}           // Custom data attribute for customer ID, these will get passed to handleListChange
-                                                            data-type='Customer'
-                                                        >
-                                                            {customer.name}
-                                                        </option>)
-                                                })}
+                                    {formElementType[index].toLowerCase() === ObjectTypes.Customer.toLowerCase() ? (
+                                        //Render Customer List in options dropdown
+                                        genericMethods.generateSelect(key, localObject, localCustomers, ObjectTypes.Customer, handleListChange)
 
-                                            </select>
-                                        ) : formElementType[index] === 'product' ? (
-                                            // Render dropdown for array
-                                            <select
-                                                name={key}
-                                                id={key}
-                                                value={localObject[key]} 
-                                                onChange={(e) => {
-                                                        const selectedOption = e.target.selectedOptions[0];
-                                                    handleListChange(selectedOption.dataset.id, selectedOption.value, selectedOption.dataset.type);
-                                                    }}
-                                                className="w-full px-4 py-2 border rounded text-gray-400"
-                                                required
-                                                >
-                                                    <option value="" disabled></option>
-                                                    {localProducts && localProducts.map((product) => (
-                                                    <option key={product.id}
-                                                        value={product.name}
-                                                        data-id={product.id}           // Custom data attribute for product ID, these will get passed to handleListChange
-                                                        data-type='Product'
-                                                    >
-                                                        {product.name}
-                                                    </option>))}
+                                    ) : formElementType[index].toLowerCase() === ObjectTypes.Product.toLowerCase() ? (
+                                        //Render Product List in options dropdown
+                                        genericMethods.generateSelect(key, localObject, localProducts, ObjectTypes.Product, handleListChange)
 
-                                            </select>
-                                            ) : formElementType[index] === 'store' ? (
-                                            // Render dropdown for array
-                                            <select
-                                                name={key}
-                                                id={key}
-                                                value={localObject[key]} //setting here
-                                                        onChange={(e) => {
-                                                            const selectedOption = e.target.selectedOptions[0];
-                                                            handleListChange(selectedOption.dataset.id, selectedOption.value, selectedOption.dataset.type);
-                                                        }}
-                                                className="w-full px-4 py-2 border rounded text-gray-400"
-                                                required
-                                            >
-                                                <option value="" disabled></option>
-                                                {localStores &&localStores.map((store) => (
-                                                    <option key={store.id}
-                                                        value={store.name}
-                                                        data-id={store.id}           // Custom data attribute for store ID, these will get passed to handleListChange
-                                                        data-type='Store'
-                                                    >
-                                                        {store.name}
-                                                    </option>))}
+                                    ) : formElementType[index].toLowerCase() === ObjectTypes.Store.toLowerCase() ? (
+                                        //Render Store List in options dropdown
+                                        genericMethods.generateSelect(key, localObject, localStores, ObjectTypes.Store, handleListChange)
 
-                                            </select>
-                                                ) : formElementType[index] === 'date' ? (
+                                    ) : formElementType[index].toLowerCase() === ObjectTypes.Date.toLowerCase() ? (
                                         // Render date input if the field is a date
-                                        <input
-                                            type="date"
-                                            name={key}
-                                            id={key}
-                                            value={localObject[key]}
-                                            onChange={handleInputChange}
-                                            className="w-1/2 px-4 py-2 border rounded text-gray-400"
-                                            required
-
-                                        />
-                                    ) : formElementType[index] === 'number' ? (
+                                        genericMethods.getDateDisplay(key, localObject, handleInputChange)
+                                    ) : formElementType[index].toLowerCase === ObjectTypes.Number.toLowerCase() ? (
                                         // Render number input if the field is a number(Price)
-                                        <input
-                                            type="number"
-                                            name={key}
-                                            id={key}
-                                            value={localObject[key]}
-                                            onChange={handleInputChange}
-                                            className="w-full px-4 py-2 border rounded text-gray-400"
-                                            step="any" 
-                                            min="0"
-                                            placeholder={`Enter ${labels[key]}`}
-                                            required
-
-                                        />
+                                        genericMethods.getNumberDisplay(key, localObject, labels, handleInputChange)
                                     ) : (
                                         // Render text input for other fields (like 'name', Address)
-                                        <input
-                                            type="text"
-                                            name={key}
-                                            id={key}
-                                            value={localObject[key]}
-                                            onChange={handleInputChange}
-                                            className="w-full px-4 py-2 border rounded text-gray-400"
-                                            placeholder={`Enter ${labels[key]}`}
-                                            required
-                                        />
+                                        genericMethods.getTextInputDisplay(key, localObject,labels, handleInputChange)
                                     )}
                                 </div>
                             );
