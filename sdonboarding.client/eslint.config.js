@@ -17,6 +17,10 @@ export default [
         sourceType: 'module',
       },
     },
+    env: {
+    browser: true, // Enable browser globals (for React)
+    node: true,    // Enable Node.js globals (for process)
+    },
     settings: { react: { version: '18.3' } },
     plugins: {
       react,

@@ -163,23 +163,23 @@ namespace sdonboarding.Server.Controllers
                     {
                         message = "Cannot delete Customer, it has reference in Sale.";
                         Console.WriteLine(message);
-                        return message;
+                        return BadRequest(new { Status = "Error", Message = message });
                     }
                     message = $"An error occurred: {dbEx.Message}";
                     Console.WriteLine(message);
-                    return message;
+                    return BadRequest(new { Status = "Error", Message = message });
                 }
                 else
                 {
                     // If InnerException is not a SqlException, handle accordingly
                     message = $"An error occurred: {dbEx.Message}";
                     Console.WriteLine(message);
-                    return message;
+                    return BadRequest(new { Status = "Error", Message = message });
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return BadRequest(new { Status = "Error", Message = ex.Message });
             }
 
         }
