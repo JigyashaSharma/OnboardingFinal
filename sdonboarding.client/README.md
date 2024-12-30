@@ -1,8 +1,46 @@
-# React + Vite
+# React Client Code
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Task 2.1: Create the redux store using redux-toolkit.
+		code:  src/redux
+		
+Task 2.2: Create the services to call the server api endpoints.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Task 2.3: Create the basic Website components Navmenu, Display entities data, sorting, Pagination, Message and footer.
+		  Code:
+				Navmenu:  src/components/Navmenu
+						  added changes in App.jsx
+				Display and sorting : src/components/UITemplate/DisplayDataTemplate.jsx
+									  src/hooks/DisplayDataHooks.jsx
+									  src/utils/GenericDisplayMethods.jsx
+									  src/utils/GenericDisplayMethods
+				Pagination: src/components/UITemplate/PaginationTemplate.jsx
+							src/hooks/PaginationHooks.jsx
+							src/utils/GenericPaginationMethods.jsx
+				Message: displays the error and success.
+							src/components/Messgae.jsx
+				Footer: src/components/Footer.jsx
+				
+Task 2.4: Create the component to create the entities.
+		  Code: 
+				src/components/UITemplate/AddDataTemplate.jsx
+				src/hooks/AddDataHooks.jsx
+				src/utils/GenericAddDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
+				
+Task 2.5: Create the component to edit the entities.
+		  Code: 
+				src/components/UITemplate/EditDataTemplate.jsx
+				src/hooks/EditDataHooks.jsx
+				src/utils/GenericEditDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
+									  
+Task 2.6: Create the component to delete the entities.
+		  Code: 
+				src/components/UITemplate/DeleteDataTemplate.jsx
+				src/hooks/DeleteDataHooks.jsx
+				src/utils/GenericDeleteDataMethods.jsx
+				Changed the Customer, Product, Store and Sale page to add this component.
+				
+Note: Sales uses the methods from : src/utils/GenericMethods.jsx and src/hooks/commonHooks.jsx
+	  I have put some validation functions also in src/utils/GenericMethods.jsx which is used by all the entities for some basic input validations.
+									  
