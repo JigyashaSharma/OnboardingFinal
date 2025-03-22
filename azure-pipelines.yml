@@ -11,6 +11,8 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+lockBehavior: sequential
+
 jobs:
   - job: BuildAndTest
     steps:
