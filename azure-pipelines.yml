@@ -4,16 +4,19 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo "Building Project"
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+  - job: Job1
+    steps:
+      - script: echo "This is Job 1"
+  
+  - job: Job2
+    dependsOn: Job1  # This ensures Job2 runs after Job1
+    steps:
+      - script: echo "This is Job 2"
