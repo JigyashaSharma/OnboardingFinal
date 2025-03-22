@@ -13,8 +13,11 @@ pool:
 
 lockBehavior: sequential
 
-jobs:
-  - job: BuildAndTest
+stages:
+- stage: A
+  lockBehavior: sequential
+  jobs:
+  - job: Job
     steps:
       - script: echo "This is Job 1"
       - script: echo "This is Job 2"
