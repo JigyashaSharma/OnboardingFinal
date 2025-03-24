@@ -1,0 +1,75 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'windows-latest' # Or you can use 'windows-latest' depending on your setup
+
+lockBehavior: sequential
+
+stages:
+- stage: Build
+  lockBehavior: sequential
+  jobs:
+  - job: BuildApp
+    steps:
+      # Checkout the code from your repository
+      - checkout: self
+
+      # Install dependencies for the React (Client-side) application
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '14.x' # Use the Node.js version your app needs
+        displayName: 'Install Node.js'
+
+      # Install React app dependencies
+      - script: |
+          cd sdonboarding.client
+          npm install
+        displayName: 'Install React dependencies'
+
+      # Build the React app
+      - script: |
+          cd sdonboarding.client
+          npm run build
+        displayName: 'Build React app'
+
+      # Install .NET SDK for server-side ASP.NET Core app
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '5.x' # Adjust based on your .NET version
+        displayName: 'Install .NET SDK'
+
+      # Restore .NET dependencies
+      - script: |
+          cd sdonboarding.Server
+          dotnet restore
+        displayName: 'Restore .NET dependencies'
+
+      # Build the ASP.NET Core application
+      - script: |
+          cd sdonboarding.Server
+          dotnet build --configuration Release
+        displayName: 'Build ASP.NET Core app'
+
+      # Publish the ASP.NET Core application
+      - script: |
+          cd sdonboarding.Server
+          dotnet publish --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
+        displayName: 'Publish ASP.NET Core app'
+
+      # Copy the React app's build output into the published ASP.NET Core app
+      - script: |
+          cp -r sdonboarding.client/build/* $(Build.ArtifactStagingDirectory)/publish/wwwroot/
+        displayName: 'Copy React build output to ASP.NET Core'
+
+      # Publish the artifacts
+      - publish: $(Build.ArtifactStagingDirectory)/publish
+        artifact: drop
